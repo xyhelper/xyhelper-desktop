@@ -27,6 +27,8 @@ export function fetchChatAPIProcess<T = any>(
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
 ) {
+  console.log(params);
+  
   return post<T>({
     url: '/chat-process',
     data: { prompt: params.prompt, options: params.options },

@@ -28,7 +28,8 @@ export const useAuthStore = defineStore('auth-store', {
   actions: {
     async getSession() {
       try {
-        const { data } = await fetchSession<SessionResponse>()
+        const data = await fetchSession<SessionResponse>()
+        // console.log(data)
         this.session = { ...data }
         return Promise.resolve(data)
       }
