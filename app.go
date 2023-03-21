@@ -25,3 +25,17 @@ func (a *App) startup(ctx context.Context) {
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
+
+// SessionRes is the response from the Session method
+type SessionRes struct {
+	Auth  bool   `json:"auth"`
+	Model string `json:"model"`
+}
+
+// Session returns the session information
+func (a *App) Session() *SessionRes {
+	return &SessionRes{
+		Auth:  false,
+		Model: "ChatGPTUnofficialProxyAPI",
+	}
+}

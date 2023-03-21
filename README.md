@@ -1,5 +1,5 @@
 # README
-
+go install github.com/wailsapp/wails/v2/cmd/wails@latest
 ## About
 
 This is the official Wails Vue-TS template.
