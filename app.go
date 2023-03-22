@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -65,6 +66,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 	g.DumpWithType(req)
 	cli := chatgpt.NewClient(
 		chatgpt.WithAccessToken("hello world"),
+		chatgpt.WithTimeout(120*time.Second),
 	)
 	message := req.Prompt
 	errMsg := map[string]interface{}{
