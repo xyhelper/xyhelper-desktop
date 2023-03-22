@@ -1,5 +1,4 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
-import { Session } from "../../wailsjs/go/main/App";
 import { post } from '@/utils/request'
 
 export function fetchChatAPI<T = any>(
@@ -27,8 +26,6 @@ export function fetchChatAPIProcess<T = any>(
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
 ) {
-  console.log(params);
-  
   return post<T>({
     url: '/chat-process',
     data: { prompt: params.prompt, options: params.options },
@@ -38,10 +35,9 @@ export function fetchChatAPIProcess<T = any>(
 }
 
 export function fetchSession<T>() {
-  // return post<T>({
-  //   url: '/session',
-  // })
-  return Session()
+  return post<T>({
+    url: '/session',
+  })
 }
 
 export function fetchVerify<T>(token: string) {
