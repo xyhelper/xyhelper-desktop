@@ -12,7 +12,8 @@ import (
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx      context.Context
+	chatStop chan bool
 }
 
 // NewApp creates a new App application struct
@@ -62,6 +63,7 @@ type ChatProcessReq struct {
 
 // ChatProcess
 func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
+	// a.chatStop <- false
 	ctx := a.ctx
 	g.DumpWithType(req)
 	cli := chatgpt.NewClient(
@@ -101,7 +103,11 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 			"conversationId":  text.ConversationID,
 			"text":            text.Content,
 		}
-		runtime.EventsEmit(a.ctx, "chat", responseData)
+		chatChannel := "chat"
+		if req.Options.ParentMessageId != "" {
+			chatChannel = req.Options.ParentMessageId
+		}
+		runtime.EventsEmit(a.ctx, chatChannel, responseData)
 		// responseJson := gjson.New(responseData)
 		// // runtime.EventsEmit(ctx, "chat", answer)
 		// // 将 JSON 数据写入响应
@@ -118,4 +124,9 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 	g.Log().Infof(ctx, "q: %s, a: %s\n", message, answer)
 
 	return
+}
+
+// StopChat
+func (a *App) StopChat() {
+	g.Log().Info(a.ctx, "StopChat~~~~~~~~~~~~~~~~~~~~")
 }

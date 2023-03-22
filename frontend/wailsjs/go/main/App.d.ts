@@ -6,3 +6,5 @@ export function ChatProcess(arg1:any):Promise<void>;
 export function Greet(arg1:string):Promise<string>;
 
 export function Session():Promise<any>;
+
+export function StopChat():Promise<void>;

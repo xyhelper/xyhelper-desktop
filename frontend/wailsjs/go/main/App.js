@@ -13,3 +13,7 @@ export function Greet(arg1) {
 export function Session() {
   return window['go']['main']['App']['Session']();
 }
+
+export function StopChat() {
+  return window['go']['main']['App']['StopChat']();
+}

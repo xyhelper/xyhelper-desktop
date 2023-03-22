@@ -5,8 +5,8 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
-import { EventsOn } from '../../../wailsjs/runtime/runtime'
-import { ChatProcess } from '../../../wailsjs/go/main/App'
+import { EventsOff, EventsOn } from '../../../wailsjs/runtime/runtime'
+import { ChatProcess, StopChat } from '../../../wailsjs/go/main/App'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
@@ -19,9 +19,11 @@ import { useChatStore, usePromptStore } from '@/store'
 // import { fetchChatAPIProcess } from '@/api'
 import { t } from '@/locales'
 
+let currentChannel = ''
+
 let controller = new AbortController()
 
-const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
+// const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
 const route = useRoute()
 const dialog = useDialog()
@@ -32,7 +34,7 @@ const chatStore = useChatStore()
 useCopyCode()
 
 const { isMobile } = useBasicLayout()
-const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
+const { addChat, updateChat, updateChatSome } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
@@ -106,96 +108,49 @@ async function onConversation() {
     },
   )
   scrollToBottom()
-  try {
-    let lastText = ''
-    EventsOn('chat', (data: any) => {
-      console.log(data)
-      updateChat(
-        +uuid,
-        dataSources.value.length - 1,
-        {
-          dateTime: new Date().toLocaleString(),
-          text: lastText + data.text ?? '',
-          inversion: false,
-          error: false,
-          loading: false,
-          conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-          requestOptions: { prompt: message, options: { ...options } },
-        },
-      )
 
-      if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
-        options.parentMessageId = data.id
-        lastText = data.text
-        message = ''
-        return onConversation()
-      }
-
-      scrollToBottom()
-    })
-    ChatProcess({
-      prompt: message,
-      options,
-      signal: controller.signal,
-    })
-  }
-  catch (error: any) {
-    const errorMessage = error?.message ?? t('common.wrong')
-
-    if (error.message === 'canceled') {
-      updateChatSome(
-        +uuid,
-        dataSources.value.length - 1,
-        {
-          loading: false,
-        },
-      )
-      scrollToBottom()
-      return
-    }
-
-    const currentChat = getChatByUuidAndIndex(+uuid, dataSources.value.length - 1)
-
-    if (currentChat?.text && currentChat.text !== '') {
-      updateChatSome(
-        +uuid,
-        dataSources.value.length - 1,
-        {
-          text: `${currentChat.text}\n[${errorMessage}]`,
-          error: false,
-          loading: false,
-        },
-      )
-      return
-    }
-
+  let lastText = ''
+  console.log("parentMessageId",options.parentMessageId)
+  // 如果options.parentMessageId不存在 则 chatchannel 为 options.parentMessageId 否则为 chat
+  const chatChannel = options.parentMessageId ? options.parentMessageId : 'chat'
+  currentChannel = chatChannel
+  EventsOn(chatChannel, (data: any) => {
     updateChat(
       +uuid,
       dataSources.value.length - 1,
       {
         dateTime: new Date().toLocaleString(),
-        text: errorMessage,
+        text: lastText + data.text ?? '',
         inversion: false,
-        error: true,
+        error: false,
         loading: false,
-        conversationOptions: null,
+        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
         requestOptions: { prompt: message, options: { ...options } },
       },
     )
     scrollToBottom()
-  }
-  finally {
+  })
+  ChatProcess({
+    prompt: message,
+    options,
+    signal: controller.signal,
+  }).then((data: any) => {
+    EventsOff(chatChannel)
     loading.value = false
-  }
+  })
+
 }
 
 async function onRegenerate(index: number) {
   if (loading.value)
     return
 
-  controller = new AbortController()
 
-  const { requestOptions } = dataSources.value[index]
+  controller = new AbortController()
+  console.log("onRegenerate index", index)
+  console.log(dataSources.value)
+  const { requestOptions } = dataSources.value[index - 1]
+  console.log("requestOptions", requestOptions)
 
   let message = requestOptions?.prompt ?? ''
 
@@ -205,6 +160,7 @@ async function onRegenerate(index: number) {
     options = { ...requestOptions.options }
 
   loading.value = true
+  console.log("loading.value", loading.value)
 
   updateChat(
     +uuid,
@@ -220,70 +176,39 @@ async function onRegenerate(index: number) {
     },
   )
 
-  try {
-    let lastText = ''
-    EventsOn('chat', (data: any) => {
-      console.log(data)
-      updateChat(
-        +uuid,
-        index,
-        {
-          dateTime: new Date().toLocaleString(),
-          text: lastText + data.text ?? '',
-          inversion: false,
-          error: false,
-          loading: false,
-          conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
-          requestOptions: { prompt: message, options: { ...options } },
-        },
-      )
 
-      if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
-        options.parentMessageId = data.id
-        lastText = data.text
-        message = ''
-        return onConversation()
-      }
-
-      scrollToBottom()
-    })
-    ChatProcess({
-      prompt: message,
-      options,
-      signal: controller.signal,
-    })
-  }
-  catch (error: any) {
-    if (error.message === 'canceled') {
-      updateChatSome(
-        +uuid,
-        index,
-        {
-          loading: false,
-        },
-      )
-      return
-    }
-
-    const errorMessage = error?.message ?? t('common.wrong')
-
+  let lastText = ''
+  const chatChannel = options.parentMessageId ? options.parentMessageId : 'chat'
+  currentChannel = chatChannel
+  EventsOn(chatChannel, (data: any) => {
+    // console.log(data)
     updateChat(
       +uuid,
       index,
       {
         dateTime: new Date().toLocaleString(),
-        text: errorMessage,
+        text: lastText + data.text ?? '',
         inversion: false,
-        error: true,
+        error: false,
         loading: false,
-        conversationOptions: null,
-        requestOptions: { prompt: message, ...options },
+        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+        requestOptions: { prompt: message, options: { ...options } },
       },
     )
-  }
-  finally {
+
+    scrollToBottom()
+  })
+  ChatProcess({
+    prompt: message,
+    options,
+    signal: controller.signal,
+  }).then((data: any) => {
+    // console.log(data)
+    EventsOff(chatChannel)
     loading.value = false
-  }
+  })
+
+
 }
 
 function handleExport() {
@@ -377,6 +302,8 @@ function handleStop() {
   if (loading.value) {
     controller.abort()
     loading.value = false
+    StopChat()
+    EventsOff(currentChannel)
   }
 }
 
