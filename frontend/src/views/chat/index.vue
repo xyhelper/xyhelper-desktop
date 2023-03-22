@@ -63,7 +63,7 @@ function handleSubmit() {
 }
 
 async function onConversation() {
-  let message = prompt.value
+  const message = prompt.value
 
   if (loading.value)
     return
@@ -109,8 +109,8 @@ async function onConversation() {
   )
   scrollToBottom()
 
-  let lastText = ''
-  console.log("parentMessageId",options.parentMessageId)
+  const lastText = ''
+  // console.log("parentMessageId",options.parentMessageId)
   // 如果options.parentMessageId不存在 则 chatchannel 为 options.parentMessageId 否则为 chat
   const chatChannel = options.parentMessageId ? options.parentMessageId : 'chat'
   currentChannel = chatChannel
@@ -138,7 +138,6 @@ async function onConversation() {
     EventsOff(chatChannel)
     loading.value = false
   })
-
 }
 
 async function onRegenerate(index: number) {
@@ -147,10 +146,10 @@ async function onRegenerate(index: number) {
 
 
   controller = new AbortController()
-  console.log("onRegenerate index", index)
-  console.log(dataSources.value)
+  // console.log("onRegenerate index", index)
+  // console.log(dataSources.value)
   const { requestOptions } = dataSources.value[index - 1]
-  console.log("requestOptions", requestOptions)
+  // console.log("requestOptions", requestOptions)
 
   let message = requestOptions?.prompt ?? ''
 
@@ -160,7 +159,7 @@ async function onRegenerate(index: number) {
     options = { ...requestOptions.options }
 
   loading.value = true
-  console.log("loading.value", loading.value)
+  // console.log("loading.value", loading.value)
 
   updateChat(
     +uuid,

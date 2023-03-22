@@ -12,8 +12,7 @@ import (
 
 // App struct
 type App struct {
-	ctx      context.Context
-	chatStop chan bool
+	ctx context.Context
 }
 
 // NewApp creates a new App application struct
