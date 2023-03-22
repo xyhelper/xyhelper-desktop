@@ -2,4 +2,6 @@
 set -e
 
 # 构建wails项目
-wails build -platform=windows/amd64,darwin/amd64,darwin/arm64 -clean -webview2=embed
+rm -rf build/bin
+wails build -platform=windows/amd64 -webview2=embed -o xyhelper-win64.exe
+wails build -platform=darwin/amd64,darwin/arm64 -webview2=embed  -o xyhelper-mac

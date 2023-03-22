@@ -71,7 +71,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 	message := req.Prompt
 	errMsg := map[string]interface{}{
 		"role":            "assistant",
-		"id":              "123",
+		"id":              "",
 		"parentMessageId": req.Options.ParentMessageId,
 		"conversationId":  req.Options.ConversationId,
 		"text":            "OPENAI服务器限流,请稍后或刷新重试,点这里 ➚",
