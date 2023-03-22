@@ -60,17 +60,31 @@ type ChatProcessReq struct {
 }
 
 // ChatProcess
-func (a *App) ChatProcess(req *ChatProcessReq) string {
+func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 	ctx := a.ctx
 	g.DumpWithType(req)
 	cli := chatgpt.NewClient(
 		chatgpt.WithAccessToken("hello world"),
 	)
 	message := req.Prompt
-	stream, err := cli.GetChatStream(message)
+	errMsg := map[string]interface{}{
+		"role":            "assistant",
+		"id":              "123",
+		"parentMessageId": req.Options.ParentMessageId,
+		"conversationId":  req.Options.ConversationId,
+		"text":            "OPENAI服务器限流,请稍后或刷新重试,点这里 ➚",
+	}
+	var stream *chatgpt.ChatStream
+	if req.Options.ConversationId == "" || req.Options.ParentMessageId == "" {
+		stream, err = cli.GetChatStream(message)
+	} else {
+		stream, err = cli.GetChatStream(message, req.Options.ConversationId, req.Options.ParentMessageId)
+	}
+
 	if err != nil {
 		g.Log().Errorf(ctx, "获取聊天内容失败: %s", err.Error())
-		return ""
+
+		return
 	}
 	var answer string
 
@@ -93,11 +107,13 @@ func (a *App) ChatProcess(req *ChatProcessReq) string {
 		// // 增加换行符
 		// res.Write([]byte("\n"))
 	}
+
 	if stream.Err != nil {
 		g.Log().Errorf(ctx, "stream closed with error: %v\n", stream.Err)
+		runtime.EventsEmit(a.ctx, "chat", errMsg)
 	}
 
 	g.Log().Infof(ctx, "q: %s, a: %s\n", message, answer)
 
-	return "Hello World"
+	return
 }
