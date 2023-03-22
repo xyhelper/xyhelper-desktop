@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/gogf/gf/v2 v2.3.3
 	github.com/wailsapp/wails/v2 v2.4.1
-	github.com/xyhelper/chatgpt-go v0.0.0-20230322021331-ef63a1aeb1a9
+	github.com/xyhelper/chatgpt-go v0.0.0-20230322072758-b462bfe273e8
 )
 
 require (
@@ -38,7 +38,7 @@ require (
 	github.com/samber/lo v1.27.1 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
-	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tkrajina/go-reflector v0.5.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.1 // indirect
