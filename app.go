@@ -61,13 +61,21 @@ type ChatProcessReq struct {
 }
 
 // ChatProcess
-func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
+func (a *App) ChatProcess(req *ChatProcessReq) {
 	// a.chatStop <- false
 	ctx := a.ctx
-	g.DumpWithType(req)
+	var err error
+	// g.DumpWithType(req)
+	g.Log().Debug(ctx, "ChatProcess", req)
+	g.Log().Debug(ctx, "ChatProcess", AccessToken)
+
+	// 生成uuid
+
 	cli := chatgpt.NewClient(
-		chatgpt.WithAccessToken("hello world"),
+		chatgpt.WithAccessToken(AccessToken),
 		chatgpt.WithTimeout(120*time.Second),
+		// chatgpt.WithBaseURI("https://chat.openai.lidong.xin/"),
+		chatgpt.WithBaseURI("http://127.0.0.1:8300/"),
 	)
 	message := req.Prompt
 	errMsg := map[string]interface{}{
@@ -75,8 +83,14 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 		"id":              "",
 		"parentMessageId": req.Options.ParentMessageId,
 		"conversationId":  req.Options.ConversationId,
-		"text":            "OPENAI服务器限流,请稍后或刷新重试,点这里 ➚",
+		"text":            "请稍后刷新重试,点这里 ➚",
 	}
+	// 设置聊天频道
+	chatChannel := "chat"
+	if req.Options.ParentMessageId != "" {
+		chatChannel = req.Options.ParentMessageId
+	}
+
 	var stream *chatgpt.ChatStream
 	if req.Options.ConversationId == "" || req.Options.ParentMessageId == "" {
 		stream, err = cli.GetChatStream(message)
@@ -86,7 +100,8 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 
 	if err != nil {
 		g.Log().Errorf(ctx, "获取聊天内容失败: %s", err.Error())
-
+		errMsg["text"] = fmt.Sprintf("获取聊天内容失败: %s .", err.Error()) + errMsg["text"].(string)
+		runtime.EventsEmit(a.ctx, chatChannel, errMsg)
 		return
 	}
 	var answer string
@@ -102,10 +117,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 			"conversationId":  text.ConversationID,
 			"text":            text.Content,
 		}
-		chatChannel := "chat"
-		if req.Options.ParentMessageId != "" {
-			chatChannel = req.Options.ParentMessageId
-		}
+
 		runtime.EventsEmit(a.ctx, chatChannel, responseData)
 		// responseJson := gjson.New(responseData)
 		// // runtime.EventsEmit(ctx, "chat", answer)
@@ -117,12 +129,11 @@ func (a *App) ChatProcess(req *ChatProcessReq) (err error) {
 
 	if stream.Err != nil {
 		g.Log().Errorf(ctx, "stream closed with error: %v\n", stream.Err)
-		runtime.EventsEmit(a.ctx, "chat", errMsg)
+		runtime.EventsEmit(a.ctx, chatChannel, errMsg)
 	}
 
 	g.Log().Infof(ctx, "q: %s, a: %s\n", message, answer)
 
-	return
 }
 
 // StopChat
