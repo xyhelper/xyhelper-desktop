@@ -82,13 +82,15 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 		"id":              "",
 		"parentMessageId": req.Options.ParentMessageId,
 		"conversationId":  req.Options.ConversationId,
-		"text":            "请稍后刷新重试,点这里 ➚",
+		"text":            "思考中...",
 	}
 	// 设置聊天频道
 	chatChannel := "chat"
 	if req.Options.ParentMessageId != "" {
 		chatChannel = req.Options.ParentMessageId
 	}
+	// 发送思考中
+	runtime.EventsEmit(a.ctx, chatChannel, errMsg)
 
 	var stream *chatgpt.ChatStream
 	if req.Options.ConversationId == "" || req.Options.ParentMessageId == "" {
@@ -99,7 +101,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 
 	if err != nil {
 		g.Log().Errorf(ctx, "获取聊天内容失败: %s", err.Error())
-		errMsg["text"] = fmt.Sprintf("获取聊天内容失败: %s .", err.Error()) + errMsg["text"].(string)
+		errMsg["text"] = fmt.Sprintf("获取聊天内容失败: %s .", err.Error()) + "请稍后刷新重试,点这里 ➚"
 		runtime.EventsEmit(a.ctx, chatChannel, errMsg)
 		return
 	}

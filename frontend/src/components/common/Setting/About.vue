@@ -12,6 +12,7 @@ interface ConfigState {
   socksProxy?: string
   httpsProxy?: string
   balance?: string
+  accessToken?: string
 }
 
 const authStore = useAuthStore()
@@ -26,6 +27,7 @@ async function fetchConfig() {
   try {
     loading.value = true
     const { data } = await fetchChatConfig<ConfigState>()
+    console.log(data)
     config.value = data
   }
   finally {
@@ -47,33 +49,28 @@ onMounted(() => {
       <div class="p-2 space-y-2 rounded-md bg-neutral-100 dark:bg-neutral-700">
         <p>
           此项目开源于
-          <a class="text-blue-600 dark:text-blue-500" href="https://github.com/xyhelper/xyhelper-desktop" target="_blank">
-            Github
-          </a>
+          https://github.com/xyhelper/xyhelper-desktop
           ，免费且基于 MIT 协议，没有任何形式的付费行为！
         </p>
         <p>
-          如果你觉得此项目对你有帮助，请在 Github 帮我点个 Star 或者给予一点赞助，谢谢！
+          如果您觉得这个软件有帮助，请考虑捐赠以支持我们的持续开发工作。
+         <center></center> <img src="https://xyhelper.cn/donate.jpg" width="264" height="371" />
         </p>
         <p>
-          项目界面基于 <a
-            class="text-blue-600 dark:text-blue-500" href="https://github.com/xyhelper/xyhelper-desktop"
-            target="_blank"
-          >
-            ChatGPT Web
-          </a> 开发，感谢作者的开源精神！
+          项目界面基于  ChatGPT Web 开发，感谢作者的开源精神！
         </p>
       </div>
-      <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p>
-      <p v-if="isChatGPTAPI">
+      <!-- <p>{{ $t("setting.api") }}：{{ config?.apiModel ?? '-' }}</p> -->
+      <!-- <p v-if="isChatGPTAPI">
         {{ $t("setting.balance") }}：{{ config?.balance ?? '-' }}
-        </p>
+        </p> -->
         <p v-if="!isChatGPTAPI">
           {{ $t("setting.reverseProxy") }}：{{ config?.reverseProxy ?? '-' }}
         </p>
-        <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p>
-        <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p>
-        <p>{{ $t("setting.httpsProxy") }}：{{ config?.httpsProxy ?? '-' }}</p>
+        <p>AccessToken：{{ config?.accessToken ?? '-' }}</p>
+        <!-- <p>{{ $t("setting.timeout") }}：{{ config?.timeoutMs ?? '-' }}</p> -->
+        <!-- <p>{{ $t("setting.socks") }}：{{ config?.socksProxy ?? '-' }}</p> -->
+        <!-- <p>{{ $t("setting.httpsProxy") }}：{{ config?.httpsProxy ?? '-' }}</p> -->
     </div>
   </NSpin>
 </template>
