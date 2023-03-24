@@ -74,7 +74,7 @@ func ApiConfig(res http.ResponseWriter, req *http.Request) {
 		"message": "",
 
 		"data": map[string]interface{}{
-			"reverseProxy": "https://freechat.xyhelper.cn/backend-api/conversation",
+			"reverseProxy": BaseURI + "/backend-api/conversation",
 			"accessToken":  AccessToken,
 		},
 	}

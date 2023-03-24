@@ -74,7 +74,8 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 	cli := chatgpt.NewClient(
 		chatgpt.WithAccessToken(AccessToken),
 		chatgpt.WithTimeout(120*time.Second),
-		chatgpt.WithBaseURI("https://freechat.xyhelper.cn/"),
+		chatgpt.WithBaseURI(BaseURI),
+		chatgpt.WithDebug(true),
 	)
 	message := req.Prompt
 	errMsg := map[string]interface{}{

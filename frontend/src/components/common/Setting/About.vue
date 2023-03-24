@@ -4,7 +4,6 @@ import { NSpin } from 'naive-ui'
 import { fetchChatConfig } from '@/api'
 import pkg from '@/../package.json'
 import { useAuthStore } from '@/store'
-
 interface ConfigState {
   timeoutMs?: number
   reverseProxy?: string
@@ -23,11 +22,12 @@ const config = ref<ConfigState>()
 
 const isChatGPTAPI = computed<boolean>(() => !!authStore.isChatGPTAPI)
 
+
 async function fetchConfig() {
   try {
     loading.value = true
     const { data } = await fetchChatConfig<ConfigState>()
-    console.log(data)
+    // console.log(data)
     config.value = data
   }
   finally {
@@ -54,7 +54,7 @@ onMounted(() => {
         </p>
         <p>
           如果您觉得这个软件有帮助，请考虑捐赠以支持我们的持续开发工作。
-         <center></center> <img src="https://xyhelper.cn/donate.jpg" width="264" height="371" />
+          <img src="/public/donate.jpg" width="264" height="371">
         </p>
         <p>
           项目界面基于  ChatGPT Web 开发，感谢作者的开源精神！

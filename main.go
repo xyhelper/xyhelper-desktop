@@ -14,6 +14,8 @@ var assets embed.FS
 
 var AccessToken string
 
+var BaseURI = "http://freechat.lidong.xin"
+
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
