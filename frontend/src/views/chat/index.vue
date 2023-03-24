@@ -17,6 +17,10 @@ import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 // import { fetchChatAPIProcess } from '@/api'
+import { useUserStore } from '@/store'
+
+// import type { UserInfo } from '@/store/modules/user/helper'
+
 import { t } from '@/locales'
 
 let currentChannel = ''
@@ -24,6 +28,9 @@ let currentChannel = ''
 let controller = new AbortController()
 
 // const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
+const userStore = useUserStore()
+
+const userInfo = computed(() => userStore.userInfo)
 
 const route = useRoute()
 const dialog = useDialog()
@@ -134,6 +141,8 @@ async function onConversation() {
     prompt: message,
     options,
     signal: controller.signal,
+    baseURI: userInfo.value.baseURI,
+    accessToken: userInfo.value.accessToken,
   }).then((data: any) => {
     EventsOff(chatChannel)
     loading.value = false
@@ -201,6 +210,8 @@ async function onRegenerate(index: number) {
     prompt: message,
     options,
     signal: controller.signal,
+    baseURI: userInfo.value.baseURI,
+    accessToken: userInfo.value.accessToken,
   }).then((data: any) => {
     // console.log(data)
     EventsOff(chatChannel)

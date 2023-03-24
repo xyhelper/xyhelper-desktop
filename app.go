@@ -58,6 +58,8 @@ type ChatProcessReq struct {
 		ConversationId  string `json:"conversationId,omitempty"`
 		ParentMessageId string `json:"parentMessageId,omitempty"`
 	} `json:"options,omitempty"`
+	BaseURI     string `json:"baseURI,omitempty"`
+	AccessToken string `json:"accessToken,omitempty"`
 }
 
 // ChatProcess

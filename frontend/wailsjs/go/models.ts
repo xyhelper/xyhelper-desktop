@@ -4,6 +4,8 @@ export namespace main {
 	    prompt: string;
 	    // Go type: struct { ConversationId string "json:\"conversationId,omitempty\""; ParentMessageId string "json:\"parentMessageId,omitempty\"" }
 	    options?: any;
+	    baseURI?: string;
+	    accessToken?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new ChatProcessReq(source);
@@ -13,6 +15,8 @@ export namespace main {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.prompt = source["prompt"];
 	        this.options = this.convertValues(source["options"], Object);
+	        this.baseURI = source["baseURI"];
+	        this.accessToken = source["accessToken"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
