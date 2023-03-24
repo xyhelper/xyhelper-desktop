@@ -69,6 +69,13 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 	var err error
 	// g.DumpWithType(req)
 	g.Log().Debug(ctx, "ChatProcess", req)
+	if req.BaseURI != "" {
+		BaseURI = req.BaseURI
+	}
+	g.Log().Debug(ctx, "ChatProcess", BaseURI)
+	if req.AccessToken != "" {
+		AccessToken = req.AccessToken
+	}
 	g.Log().Debug(ctx, "ChatProcess", AccessToken)
 
 	// 生成uuid
