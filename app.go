@@ -113,6 +113,8 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 		// 解决帐号切换后会话丢失的问题 使用新会话新求
 		if err.Error() == "send message failed: 404 Not Found" {
 			g.Log().Errorf(ctx, "获取聊天内容失败: %s,这是首次出现将重试", err.Error())
+			errMsg["text"] = "会话丢失,正在重新生成..."
+			runtime.EventsEmit(a.ctx, chatChannel, errMsg)
 			stream, err = cli.GetChatStream(message)
 		}
 	}
