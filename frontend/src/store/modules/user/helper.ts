@@ -1,4 +1,6 @@
+// import { v4 as uuidv4 } from 'uuid'
 import { ss } from '@/utils/storage'
+
 
 const LOCAL_NAME = 'userStorage'
 
@@ -6,6 +8,8 @@ export interface UserInfo {
   avatar: string
   name: string
   description: string
+  baseURI: string
+  accessToken: string
 }
 
 export interface UserState {
@@ -13,11 +17,26 @@ export interface UserState {
 }
 
 export function defaultSetting(): UserState {
+  // 生成随机的字符串
+  function generateRandomString(length: number): string {
+    let result = ''
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    for (let i = 0; i < length; i++)
+      result += characters.charAt(Math.floor(Math.random() * characters.length))
+
+    return result
+  }
+  const randomString = generateRandomString(10);
+  console.log(randomString); // 输出类似于：lJRObYwExl
+
+
   return {
     userInfo: {
       avatar: 'https://www.lidong.xin/hero.jpeg',
       name: '攻城狮老李',
-      description: 'Star on <a href="https://github.com/xyhelper/xyhelper-desktop" class="text-blue-500" target="_blank" >Github</a>',
+      description: 'xyhelper-desktop',
+      baseURI: 'http://freechat.lidong.xin',
+      accessToken: randomString,
     },
   }
 }

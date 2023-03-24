@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@traptitech/markdown-it-katex": "^3.6.0",
+    "@types/uuid": "^9.0.1",
     "@vueuse/core": "^9.13.0",
     "highlight.js": "^11.7.0",
     "html2canvas": "^1.4.1",

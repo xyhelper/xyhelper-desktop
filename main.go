@@ -12,9 +12,12 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-var AccessToken string
+var (
+	AccessToken string
+	Version     = "dev"
 
-var BaseURI = "http://freechat.lidong.xin"
+	BaseURI = "http://freechat.lidong.xin"
+)
 
 func main() {
 	// Create an instance of the app structure
@@ -22,7 +25,7 @@ func main() {
 	AccessToken = uuid.NewString()
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "XYHELPER",
+		Title:  "XYHELPER version: " + Version,
 		Width:  1050,
 		Height: 649,
 		AssetServer: &assetserver.Options{

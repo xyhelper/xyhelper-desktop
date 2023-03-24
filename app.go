@@ -75,7 +75,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 		chatgpt.WithAccessToken(AccessToken),
 		chatgpt.WithTimeout(120*time.Second),
 		chatgpt.WithBaseURI(BaseURI),
-		chatgpt.WithDebug(true),
+		// chatgpt.WithDebug(true),
 	)
 	message := req.Prompt
 	errMsg := map[string]interface{}{
@@ -100,6 +100,13 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 		stream, err = cli.GetChatStream(message, req.Options.ConversationId, req.Options.ParentMessageId)
 	}
 
+	if err != nil {
+		// 解决帐号切换后会话丢失的问题 使用新会话新求
+		if err.Error() == "send message failed: 404 Not Found" {
+			g.Log().Errorf(ctx, "获取聊天内容失败: %s,这是首次出现将重试", err.Error())
+			stream, err = cli.GetChatStream(message)
+		}
+	}
 	if err != nil {
 		g.Log().Errorf(ctx, "获取聊天内容失败: %s", err.Error())
 		errMsg["text"] = fmt.Sprintf("获取聊天内容失败: %s .", err.Error()) + "请稍后刷新重试,点这里 ➚"

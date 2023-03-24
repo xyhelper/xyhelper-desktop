@@ -36,3 +36,21 @@ MacOS/Apple Silicon
 如果你觉得这个项目对你有帮助, 请考虑捐赠, 以支持项目的持续开发。
 
 ![Donate](./frontend/public/donate.jpg)
+
+## 关于API网关
+
+因为 chatgpt 的对话接口是不能直接调用的, 需要通过 API 网关才能调用, 所以本项目使用了一个 API 网关。
+
+Cloudflare `加速` 后的网关地址为(一般适合境外用户):
+
+```
+https://freechat.xyhelper.com
+```
+未加速网关地址为:
+
+```
+http://freechat.lidong.xin
+```
+如果你想自己搭建 API 网关, 请联系我们。
+
+![wechat](./docs/wechat.png)

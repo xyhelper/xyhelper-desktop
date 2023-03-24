@@ -76,6 +76,7 @@ func ApiConfig(res http.ResponseWriter, req *http.Request) {
 		"data": map[string]interface{}{
 			"reverseProxy": BaseURI + "/backend-api/conversation",
 			"accessToken":  AccessToken,
+			"version":      Version,
 		},
 	}
 	responseJson := gjson.New(responseData)
