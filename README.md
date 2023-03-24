@@ -26,3 +26,9 @@ MacOS/Apple Silicon
 
 * [Github 下载](https://github.com/xyhelper/xyhelper-desktop/releases/latest/download/xyhelper-darwin-arm64.zip)
 * [ghproxy 加速下载](https://ghproxy.com/github.com/xyhelper/xyhelper-desktop/releases/latest/download/xyhelper-darwin-arm64.zip)
+
+## 捐赠
+
+如果你觉得这个项目对你有帮助, 请考虑捐赠, 以支持项目的持续开发。
+
+![Donate](./frontend/public/donate.jpg)
