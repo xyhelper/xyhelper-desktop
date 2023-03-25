@@ -27,14 +27,14 @@ export function defaultSetting(): UserState {
     return result
   }
   const randomString = generateRandomString(10);
-  console.log(randomString); // 输出类似于：lJRObYwExl
+  // console.log(randomString); // 输出类似于：lJRObYwExl
 
 
   return {
     userInfo: {
-      avatar: 'https://www.lidong.xin/hero.jpeg',
+      avatar: 'https://xyhelper.cn/defaultavatar.jpeg',
       name: '攻城狮老李',
-      description: 'xyhelper-desktop',
+      description: '官网: https://xyhelper.cn',
       baseURI: 'http://freechat.lidong.xin',
       accessToken: randomString,
     },

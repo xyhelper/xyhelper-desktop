@@ -54,8 +54,8 @@ onMounted(() => {
           ，免费且基于 MIT 协议。
         </p>
         <p>
-          如果您觉得这个软件有帮助，请考虑捐赠以支持我们的持续开发工作。
-         <center> <img src="/donate.jpg" width="264" height="371" /></center>
+          <!-- 如果您觉得这个软件有帮助，请考虑捐赠以支持我们的持续开发工作。 -->
+         <!-- <center> <img src="/donate.jpg" width="264" height="371" /></center> -->
         </p>
         <p>
           项目界面基于  ChatGPT Web 开发，感谢作者的开源精神！
