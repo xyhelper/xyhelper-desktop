@@ -25,7 +25,7 @@ func main() {
 	AccessToken = uuid.NewString()
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "XYHELPER version: " + Version,
+		Title:  "XYHELPER http://xyhelper.cn version: " + Version,
 		Width:  1050,
 		Height: 649,
 		AssetServer: &assetserver.Options{
