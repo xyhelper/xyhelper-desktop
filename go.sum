@@ -105,8 +105,6 @@ github.com/wailsapp/mimetype v1.4.1 h1:pQN9ycO7uo4vsUUuPeHEYoUkLVkaRntMnHJxVwYhw
 github.com/wailsapp/mimetype v1.4.1/go.mod h1:9aV5k31bBOv5z6u+QP8TltzvNGJPmNJD4XlAL3U+j3o=
 github.com/wailsapp/wails/v2 v2.4.1 h1:Ns7MOKWQM6l0ttBxpd5VcgYrH+GNPOnoDfnsBpbDnzM=
 github.com/wailsapp/wails/v2 v2.4.1/go.mod h1:jbOZbcr/zm79PxXxAjP8UoVlDd9wLW3uDs+isIthDfs=
-github.com/xyhelper/chatgpt-go v1.0.0 h1:c6gzECmy3OYb/35EyDMjnv9zc+BU+E7rHypVKkpyPTU=
-github.com/xyhelper/chatgpt-go v1.0.0/go.mod h1:WoCMZ6S2M8RCOlGVTxDhWiZc9Um3TDzz4uP8cebinBA=
 github.com/xyhelper/chatgpt-go v1.0.1 h1:MMkA8pk4/l/VIVC8M/IHxDtGphMANvPf8z0F8P0KGqU=
 github.com/xyhelper/chatgpt-go v1.0.1/go.mod h1:WoCMZ6S2M8RCOlGVTxDhWiZc9Um3TDzz4uP8cebinBA=
 github.com/yuin/goldmark v1.4.0/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
