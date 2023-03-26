@@ -1,5 +1,11 @@
 # 开发说明
 go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+sudo apt install libgtk-3-dev
+
+sudo apt install libwebkit2gtk-4.0-dev
+
+sudo apt install nsis
 ## About
 
 This is the official Wails Vue-TS template.
@@ -17,3 +23,6 @@ to this in your browser, and you can call your Go code from devtools.
 ## Building
 
 To build a redistributable, production mode package, use `wails build`.
+
+
+
