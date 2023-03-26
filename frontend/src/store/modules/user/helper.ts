@@ -35,7 +35,7 @@ export function defaultSetting(): UserState {
       avatar: 'https://xyhelper.cn/defaultavatar.jpeg',
       name: '攻城狮老李',
       description: '官网: https://xyhelper.cn',
-      baseURI: 'http://freechat.lidong.xin',
+      baseURI: 'https://freechat.lidong.xin',
       accessToken: randomString,
     },
   }
