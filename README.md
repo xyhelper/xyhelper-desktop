@@ -54,3 +54,7 @@ https://freechat.lidong.xin
 如果你想自己搭建 API 网关, 请联系我们。
 
 ![wechat](./docs/wechat.png)
+
+## 友情链接
+
+- [CoolAdmin](https://cool-js.com) - 一个项目,用COOL就够了。AI编码、物联网、函数云开发等更加智能和全面的功能，让应用开发紧跟时代的步伐，cool绝不落后！！！ 
