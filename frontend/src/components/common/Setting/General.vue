@@ -145,6 +145,21 @@ function handleImportButtonClick(): void {
           {{ $t('common.save') }}
         </NButton>
       </div>
+      <!-- <div
+        class="flex items-center space-x-4"
+        :class="isMobile && 'items-start'"
+      >
+        <span class="flex-shrink-0 w-[100px]">{{ $t('setting.serverConfig') }}</span>
+
+        <div class="flex flex-wrap items-center gap-4">
+          <NButton size="small" @click="exportData">
+            <template #icon>
+              <SvgIcon icon="ri:refresh-line" />
+            </template>
+            {{ $t('common.refreshBinding') }}
+          </NButton>
+        </div>
+      </div> -->
       <div class="flex items-center space-x-4">
         <span class="flex-shrink-0 w-[100px]">{{ $t('setting.avatarLink') }}</span>
         <div class="flex-1">

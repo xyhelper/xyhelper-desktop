@@ -60,6 +60,7 @@ type ChatProcessReq struct {
 	} `json:"options,omitempty"`
 	BaseURI     string `json:"baseURI,omitempty"`
 	AccessToken string `json:"accessToken,omitempty"`
+	IsGPT4      bool   `json:"isGPT4,omitempty"`
 }
 
 // ChatProcess
@@ -67,6 +68,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 	// a.chatStop <- false
 	ctx := a.ctx
 	var err error
+	var cli *chatgpt.Client
 	// g.DumpWithType(req)
 	g.Log().Debug(ctx, "ChatProcess", req)
 	if req.BaseURI != "" {
@@ -78,14 +80,22 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 	}
 	g.Log().Debug(ctx, "ChatProcess", AccessToken)
 
-	// 生成uuid
+	if req.IsGPT4 {
+		cli = chatgpt.NewClient(
+			chatgpt.WithAccessToken(AccessToken),
+			chatgpt.WithTimeout(120*time.Second),
+			chatgpt.WithBaseURI(BaseURI),
+			chatgpt.WithModel("gpt4"),
+			// chatgpt.WithDebug(true),
+		)
+	} else {
+		cli = chatgpt.NewClient(
+			chatgpt.WithAccessToken(AccessToken),
+			chatgpt.WithTimeout(120*time.Second),
+			chatgpt.WithBaseURI(BaseURI),
+		)
+	}
 
-	cli := chatgpt.NewClient(
-		chatgpt.WithAccessToken(AccessToken),
-		chatgpt.WithTimeout(120*time.Second),
-		chatgpt.WithBaseURI(BaseURI),
-		// chatgpt.WithDebug(true),
-	)
 	message := req.Prompt
 	errMsg := map[string]interface{}{
 		"role":            "assistant",

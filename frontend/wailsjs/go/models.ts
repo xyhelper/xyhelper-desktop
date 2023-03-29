@@ -6,6 +6,7 @@ export namespace main {
 	    options?: any;
 	    baseURI?: string;
 	    accessToken?: string;
+	    isGPT4?: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new ChatProcessReq(source);
@@ -17,6 +18,7 @@ export namespace main {
 	        this.options = this.convertValues(source["options"], Object);
 	        this.baseURI = source["baseURI"];
 	        this.accessToken = source["accessToken"];
+	        this.isGPT4 = source["isGPT4"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

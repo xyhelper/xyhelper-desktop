@@ -1,8 +1,8 @@
 <script setup lang='ts'>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { NAutoComplete, NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NSwitch, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { EventsOff, EventsOn } from '../../../wailsjs/runtime/runtime'
 import { ChatProcess, StopChat } from '../../../wailsjs/go/main/App'
@@ -51,7 +51,7 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
-
+const State = reactive({ isGPT4: false })
 // 添加PromptStore
 const promptStore = usePromptStore()
 
@@ -136,12 +136,15 @@ async function onConversation() {
     )
     scrollToBottom()
   })
+
   ChatProcess({
     prompt: message,
     options,
     signal: controller.signal,
     baseURI: userInfo.value.baseURI,
     accessToken: userInfo.value.accessToken,
+    isGPT4: State.isGPT4,
+
   }).then((data: any) => {
     EventsOff(chatChannel)
     loading.value = false
@@ -368,6 +371,14 @@ function handleStop() {
   }
 }
 
+function ChangeModel() {
+  if (!State.isGPT4)
+    ms.success('已关闭gpt4模型')
+
+  else
+    ms.success('已开启gpt4模型')
+}
+
 // 可优化部分
 // 搜索选项计算，这里使用value作为索引项，所以当出现重复value时渲染异常(多项同时出现选中效果)
 // 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
@@ -477,6 +488,14 @@ onUnmounted(() => {
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
+          <NSwitch v-model:value="State.isGPT4" class="w-[160px]" @update:value="$enent => ChangeModel(`gpt4`)">
+            <template #checked>
+              gpt4
+            </template>
+            <template #unchecked>
+              gpt3.5
+            </template>
+          </NSwitch>
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput

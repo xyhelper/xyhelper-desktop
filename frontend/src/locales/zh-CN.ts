@@ -26,6 +26,7 @@ export default {
     failed: '操作失败',
     verify: '验证',
     unauthorizedTips: '未经授权，请先进行验证。',
+    refreshBinding: '刷新绑定',
   },
   chat: {
     placeholder: '来说点什么吧...（Shift + Enter = 换行）',
@@ -68,6 +69,7 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余额',
+    serverConfig: '服务器配置',
   },
   store: {
     local: '本地',

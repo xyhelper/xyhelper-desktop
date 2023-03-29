@@ -26,6 +26,7 @@ export default {
     failed: '操作失敗',
     verify: '驗證',
     unauthorizedTips: '未經授權，請先進行驗證。',
+    refreshBinding: '重新綁定',
   },
   chat: {
     placeholder: '來說點什麼...（Shift + Enter = 換行）',
@@ -66,6 +67,7 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余額',
+    serverConfig: '伺服器設定',
   },
   store: {
     local: '本機',

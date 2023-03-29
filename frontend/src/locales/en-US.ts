@@ -48,6 +48,7 @@ export default {
     clearHistoryConfirm: 'Are you sure to clear chat history?',
     preview: 'Preview',
     showRawText: 'Show as raw text',
+    refreshBinding: 'Refresh Binding',
   },
   setting: {
     setting: 'Setting',
@@ -66,6 +67,7 @@ export default {
     socks: 'Socks',
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
+    serverConfig: 'Server Config',
   },
   store: {
     local: 'Local',
