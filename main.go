@@ -23,6 +23,7 @@ var (
 	Version     = "dev"
 
 	BaseURI = "http://freechat.lidong.xin"
+	app     *App
 )
 
 func main() {
@@ -37,7 +38,7 @@ func main() {
 	}
 
 	// Create an instance of the app structure
-	app := NewApp()
+	app = NewApp()
 	AccessToken = uuid.NewString()
 	// Create application with options
 	err = wails.Run(&options.App{

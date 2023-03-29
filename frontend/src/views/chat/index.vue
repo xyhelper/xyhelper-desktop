@@ -1,5 +1,4 @@
 <script setup lang='ts'>
-
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -153,14 +152,13 @@ async function onRegenerate(index: number) {
   if (loading.value)
     return
 
-
   controller = new AbortController()
   // console.log("onRegenerate index", index)
   // console.log(dataSources.value)
   const { requestOptions } = dataSources.value[index - 1]
   // console.log("requestOptions", requestOptions)
 
-  let message = requestOptions?.prompt ?? ''
+  const message = requestOptions?.prompt ?? ''
 
   let options: Chat.ConversationRequest = {}
 
@@ -184,8 +182,7 @@ async function onRegenerate(index: number) {
     },
   )
 
-
-  let lastText = ''
+  const lastText = ''
   const chatChannel = options.parentMessageId ? options.parentMessageId : 'chat'
   currentChannel = chatChannel
   EventsOn(chatChannel, (data: any) => {
@@ -217,13 +214,60 @@ async function onRegenerate(index: number) {
     EventsOff(chatChannel)
     loading.value = false
   })
-
-
 }
 
-function handleExport() {
+// function handleExport() {
+//   if (loading.value)
+//     return
+
+//   const d = dialog.warning({
+//     title: t('chat.exportImage'),
+//     content: t('chat.exportImageConfirm'),
+//     positiveText: t('common.yes'),
+//     negativeText: t('common.no'),
+//     onPositiveClick: async () => {
+//       try {
+//         d.loading = true
+//         const ele = document.getElementById('image-wrapper')
+//         const canvas = await html2canvas(ele as HTMLDivElement, {
+//           useCORS: true,
+//         })
+//         const imgUrl = canvas.toDataURL('image/png')
+//         const tempLink = document.createElement('a')
+//         tempLink.style.display = 'none'
+//         tempLink.href = imgUrl
+//         tempLink.setAttribute('download', 'chat-shot.png')
+//         if (typeof tempLink.download === 'undefined')
+//           tempLink.setAttribute('target', '_blank')
+
+//         document.body.appendChild(tempLink)
+//         tempLink.click()
+//         document.body.removeChild(tempLink)
+//         window.URL.revokeObjectURL(imgUrl)
+//         d.loading = false
+//         ms.success(t('chat.exportSuccess'))
+//         Promise.resolve()
+//       }
+//       catch (error: any) {
+//         ms.error(t('chat.exportFailed'))
+//       }
+//       finally {
+//         d.loading = false
+//       }
+//     },
+//   })
+// }
+async function handleExport() {
   if (loading.value)
     return
+
+  const ele = document.getElementById('image-wrapper')
+  const canvas = await html2canvas(ele as HTMLDivElement, {
+    useCORS: true,
+  })
+  const imgUrl = canvas.toDataURL('image/png')
+  const formData = new FormData()
+  formData.append('image', dataURItoBlob(imgUrl), 'chat-shot.png')
 
   const d = dialog.warning({
     title: t('chat.exportImage'),
@@ -233,34 +277,41 @@ function handleExport() {
     onPositiveClick: async () => {
       try {
         d.loading = true
-        const ele = document.getElementById('image-wrapper')
-        const canvas = await html2canvas(ele as HTMLDivElement, {
-          useCORS: true,
-        })
-        const imgUrl = canvas.toDataURL('image/png')
-        const tempLink = document.createElement('a')
-        tempLink.style.display = 'none'
-        tempLink.href = imgUrl
-        tempLink.setAttribute('download', 'chat-shot.png')
-        if (typeof tempLink.download === 'undefined')
-          tempLink.setAttribute('target', '_blank')
 
-        document.body.appendChild(tempLink)
-        tempLink.click()
-        document.body.removeChild(tempLink)
-        window.URL.revokeObjectURL(imgUrl)
-        d.loading = false
-        ms.success(t('chat.exportSuccess'))
-        Promise.resolve()
+        const response = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (response.ok) {
+          const json = await response.json()
+          console.log('Image upload successful:', json.url)
+          ms.success(t('chat.uploadSuccess'))
+        }
+        else {
+          throw new Error('Image upload failed')
+        }
       }
-      catch (error: any) {
-        ms.error(t('chat.exportFailed'))
+      catch (error) {
+        console.error('Image upload failed:', error)
+        ms.error(t('chat.uploadFailed'))
       }
       finally {
         d.loading = false
       }
     },
   })
+}
+
+function dataURItoBlob(dataURI: string): Blob {
+  const byteString = atob(dataURI.split(',')[1])
+  const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
+  for (let i = 0; i < byteString.length; i++)
+    ia[i] = byteString.charCodeAt(i)
+
+  return new Blob([ab], { type: mimeString })
 }
 
 function handleDelete(index: number) {
@@ -372,12 +423,16 @@ onUnmounted(() => {
 
 <template>
   <div class="flex flex-col w-full h-full">
-    <HeaderComponent v-if="isMobile" :using-context="usingContext" @export="handleExport"
-      @toggle-using-context="toggleUsingContext" />
+    <HeaderComponent
+      v-if="isMobile" :using-context="usingContext" @export="handleExport"
+      @toggle-using-context="toggleUsingContext"
+    />
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
-        <div id="image-wrapper" class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
-          :class="[isMobile ? 'p-2' : 'p-4']">
+        <div
+          id="image-wrapper" class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
+          :class="[isMobile ? 'p-2' : 'p-4']"
+        >
           <template v-if="!dataSources.length">
             <div class="flex items-center justify-center mt-4 text-center text-neutral-300">
               <SvgIcon icon="ri:bubble-chart-fill" class="mr-2 text-3xl" />
@@ -386,9 +441,11 @@ onUnmounted(() => {
           </template>
           <template v-else>
             <div>
-              <Message v-for="(item, index) of dataSources" :key="index" :date-time="item.dateTime" :text="item.text"
+              <Message
+                v-for="(item, index) of dataSources" :key="index" :date-time="item.dateTime" :text="item.text"
                 :inversion="item.inversion" :error="item.error" :loading="item.loading" @regenerate="onRegenerate(index)"
-                @delete="handleDelete(index)" />
+                @delete="handleDelete(index)"
+              />
               <div class="sticky bottom-0 left-0 flex justify-center">
                 <NButton v-if="loading" type="warning" @click="handleStop">
                   <template #icon>
@@ -422,9 +479,11 @@ onUnmounted(() => {
           </HoverButton>
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
-              <NInput v-model:value="prompt" type="textarea" :placeholder="placeholder"
+              <NInput
+                v-model:value="prompt" type="textarea" :placeholder="placeholder"
                 :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }" @input="handleInput" @focus="handleFocus"
-                @blur="handleBlur" @keypress="handleEnter" />
+                @blur="handleBlur" @keypress="handleEnter"
+              />
             </template>
           </NAutoComplete>
           <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
