@@ -111,11 +111,8 @@ func UploadImage(res http.ResponseWriter, req *http.Request) {
 	defer file.Close()
 	// 打开保存文件对话框
 	filepath, err := runtime.SaveFileDialog(app.ctx, runtime.SaveDialogOptions{
-		DefaultFilename:            header.Filename,
-		Title:                      "保存图片",
-		ShowHiddenFiles:            false,
-		CanCreateDirectories:       false,
-		TreatPackagesAsDirectories: false,
+		DefaultFilename: header.Filename,
+		Title:           "保存图片",
 	})
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
@@ -136,16 +133,19 @@ func UploadImage(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
+	} else {
+		http.Error(res, "filepath is empty", http.StatusBadRequest)
+		return
 	}
-	responseData := map[string]interface{}{
-		"status":  "Success",
-		"message": "",
-		"data": map[string]interface{}{
-			"image": header.Filename,
-		},
-	}
-	responseJson := gjson.New(responseData)
-	// 将 JSON 数据写入响应
-	res.Header().Set("Content-Type", "application/json")
-	res.Write(responseJson.MustToJson())
+	// responseData := map[string]interface{}{
+	// 	"status":  "Success",
+	// 	"message": "",
+	// 	"data": map[string]interface{}{
+	// 		"image": header.Filename,
+	// 	},
+	// }
+	// responseJson := gjson.New(responseData)
+	// // 将 JSON 数据写入响应
+	// res.Header().Set("Content-Type", "application/json")
+	// res.Write(responseJson.MustToJson())
 }
