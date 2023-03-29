@@ -85,7 +85,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 			chatgpt.WithAccessToken(AccessToken),
 			chatgpt.WithTimeout(120*time.Second),
 			chatgpt.WithBaseURI(BaseURI),
-			chatgpt.WithModel("gpt4"),
+			chatgpt.WithModel("gpt-4"),
 			// chatgpt.WithDebug(true),
 		)
 	} else {
