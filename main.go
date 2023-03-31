@@ -28,6 +28,7 @@ var (
 
 func main() {
 	var ctx = gctx.New()
+
 	var title = "XYHELPER 开源免费的AI助理 https://xyhelper.cn version: " + Version
 	latestVersion, err := GetLatestVersion(ctx)
 	if err == nil {
@@ -64,7 +65,13 @@ func main() {
 }
 
 func GetLatestVersion(ctx g.Ctx) (lasterVersion string, err error) {
-	r, err := g.Client().Get(ctx, "https://xyhelper.cn/version.txt?time="+gconv.String(gtime.Timestamp()), nil)
+	httpClient := g.Client()
+	httpProxyAddr, err := g.Cfg().Get(ctx, "httpProxyAddr")
+	if err == nil && httpProxyAddr.String() != "" {
+		g.Log().Info(ctx, "httpProxyAddr", httpProxyAddr.String())
+		httpClient.SetProxy(httpProxyAddr.String())
+	}
+	r, err := httpClient.Get(ctx, "https://xyhelper.cn/version.txt?time="+gconv.String(gtime.Timestamp()), nil)
 	if err != nil {
 		g.Log().Error(ctx, "GetLatestVersion", err.Error())
 		return

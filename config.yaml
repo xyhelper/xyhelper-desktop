@@ -1,0 +1,6 @@
+# httpProxyAddr: http://user:pass@127.0.0.1:8080
+# logger:
+#   path: "./logs/"
+#   file: "{Y-m-d}.log"
+#   level : "all"
+#   stdout: true

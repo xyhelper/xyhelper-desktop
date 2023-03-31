@@ -80,20 +80,32 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 	}
 	g.Log().Debug(ctx, "ChatProcess", AccessToken)
 
+	// if req.IsGPT4 {
+	// 	cli = chatgpt.NewClient(
+	// 		chatgpt.WithAccessToken(AccessToken),
+	// 		chatgpt.WithTimeout(120*time.Second),
+	// 		chatgpt.WithBaseURI(BaseURI),
+	// 		// chatgpt.WithModel("gpt-4"),
+	// 		// chatgpt.WithDebug(true),
+	// 	)
+	// } else {
+	// 	cli = chatgpt.NewClient(
+	// 		chatgpt.WithAccessToken(AccessToken),
+	// 		chatgpt.WithTimeout(120*time.Second),
+	// 		chatgpt.WithBaseURI(BaseURI),
+	// 	)
+	// }
+	cli = chatgpt.NewClient(
+		chatgpt.WithAccessToken(AccessToken),
+		chatgpt.WithTimeout(120*time.Second),
+		chatgpt.WithBaseURI(BaseURI),
+	)
 	if req.IsGPT4 {
-		cli = chatgpt.NewClient(
-			chatgpt.WithAccessToken(AccessToken),
-			chatgpt.WithTimeout(120*time.Second),
-			chatgpt.WithBaseURI(BaseURI),
-			chatgpt.WithModel("gpt-4"),
-			// chatgpt.WithDebug(true),
-		)
-	} else {
-		cli = chatgpt.NewClient(
-			chatgpt.WithAccessToken(AccessToken),
-			chatgpt.WithTimeout(120*time.Second),
-			chatgpt.WithBaseURI(BaseURI),
-		)
+		cli.SetModel("gpt-4")
+	}
+	httpProxyAddr, err := g.Cfg().Get(ctx, "httpProxyAddr")
+	if err == nil {
+		cli.SetProxy(httpProxyAddr.String())
 	}
 
 	message := req.Prompt
@@ -174,7 +186,14 @@ func (a *App) StopChat() {
 // RefreshBind
 func (a *App) RefreshBind(baseURI string, accessToken string) (result string) {
 	g.Log().Info(a.ctx, "RefreshToken~~~~~~~~~~~~~~~~~~~~", baseURI, accessToken)
-	res, err := g.Client().ContentJson().Post(a.ctx, baseURI+"/backend-api/xy/refresh-bind", g.Map{
+	ctx := a.ctx
+	httpClient := g.Client()
+	httpProxyAddr, err := g.Cfg().Get(ctx, "httpProxyAddr")
+	if err == nil && httpProxyAddr.String() != "" {
+		g.Log().Info(ctx, "httpProxyAddr", httpProxyAddr.String())
+		httpClient.SetProxy(httpProxyAddr.String())
+	}
+	res, err := httpClient.ContentJson().Post(a.ctx, baseURI+"/backend-api/xy/refresh-bind", g.Map{
 		"token": accessToken,
 	})
 	if err != nil {

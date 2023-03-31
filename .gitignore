@@ -4,3 +4,4 @@ frontend/dist
 chatgpt-go
 go.work
 .DS_Store
+logs
