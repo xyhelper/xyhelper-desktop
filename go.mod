@@ -6,7 +6,7 @@ require (
 	github.com/gogf/gf/v2 v2.3.3
 	github.com/google/uuid v1.3.0
 	github.com/wailsapp/wails/v2 v2.4.1
-	github.com/xyhelper/chatgpt-go v1.0.1
+	github.com/xyhelper/chatgpt-go v1.0.4
 )
 
 require (
