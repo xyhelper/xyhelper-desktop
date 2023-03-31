@@ -70,6 +70,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余额',
     serverConfig: '服务器配置',
+    confirmRefreshBind: '是否刷新绑定?',
   },
   store: {
     local: '本地',

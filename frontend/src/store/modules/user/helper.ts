@@ -32,7 +32,7 @@ export function defaultSetting(): UserState {
 
   return {
     userInfo: {
-      avatar: 'https://xyhelper.cn/defaultavatar.jpeg',
+      avatar: '/defaultavatar.jpeg',
       name: '攻城狮老李',
       description: '官网: https://xyhelper.cn',
       baseURI: 'https://freechat.lidong.xin',

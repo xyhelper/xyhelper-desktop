@@ -10,6 +10,10 @@ export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
+export function RefreshBind(arg1, arg2) {
+  return window['go']['main']['App']['RefreshBind'](arg1, arg2);
+}
+
 export function Session() {
   return window['go']['main']['App']['Session']();
 }

@@ -145,7 +145,7 @@ async function onConversation() {
     accessToken: userInfo.value.accessToken,
     isGPT4: State.isGPT4,
 
-  }).then((data: any) => {
+  }).then(() => {
     EventsOff(chatChannel)
     loading.value = false
   })
@@ -376,7 +376,7 @@ function ChangeModel() {
     ms.success('已关闭gpt4模型')
 
   else
-    ms.success('已开启gpt4模型')
+    ms.success('已开启gpt4模型,仅PLUS用户开启有效')
 }
 
 // 可优化部分
@@ -488,7 +488,7 @@ onUnmounted(() => {
               <SvgIcon icon="ri:chat-history-line" />
             </span>
           </HoverButton>
-          <NSwitch v-model:value="State.isGPT4" class="w-[160px]" @update:value="$enent => ChangeModel(`gpt4`)">
+          <NSwitch v-model:value="State.isGPT4" class="w-[160px]" @update:value="$enent => ChangeModel()">
             <template #checked>
               gpt4
             </template>

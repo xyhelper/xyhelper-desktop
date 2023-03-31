@@ -170,3 +170,22 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 func (a *App) StopChat() {
 	g.Log().Info(a.ctx, "StopChat~~~~~~~~~~~~~~~~~~~~")
 }
+
+// RefreshBind
+func (a *App) RefreshBind(baseURI string, accessToken string) (result string) {
+	g.Log().Info(a.ctx, "RefreshToken~~~~~~~~~~~~~~~~~~~~", baseURI, accessToken)
+	res, err := g.Client().ContentJson().Post(a.ctx, baseURI+"/backend-api/xy/refresh-bind", g.Map{
+		"token": accessToken,
+	})
+	if err != nil {
+		g.Log().Error(a.ctx, "RefreshToken", err)
+		return "fail"
+	}
+	defer res.Close()
+	if res.StatusCode != 200 {
+		g.Log().Error(a.ctx, "RefreshToken", res.ReadAllString())
+		return "fail"
+	}
+
+	return "success"
+}

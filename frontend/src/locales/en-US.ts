@@ -68,6 +68,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API Balance',
     serverConfig: 'Server Config',
+    confirmRefreshBind: 'Are you sure to refresh the binding?',
   },
   store: {
     local: 'Local',

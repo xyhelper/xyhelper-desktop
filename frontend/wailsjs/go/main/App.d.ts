@@ -5,6 +5,8 @@ export function ChatProcess(arg1:any):Promise<void>;
 
 export function Greet(arg1:string):Promise<string>;
 
+export function RefreshBind(arg1:string,arg2:string):Promise<string>;
+
 export function Session():Promise<any>;
 
 export function StopChat():Promise<void>;

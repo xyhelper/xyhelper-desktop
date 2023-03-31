@@ -68,6 +68,7 @@ export default {
     httpsProxy: 'HTTPS Proxy',
     balance: 'API余額',
     serverConfig: '伺服器設定',
+    confirmRefreshBind: '是否重新綁定？',
   },
   store: {
     local: '本機',
