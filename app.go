@@ -97,7 +97,7 @@ func (a *App) ChatProcess(req *ChatProcessReq) {
 	// }
 	cli = chatgpt.NewClient(
 		chatgpt.WithAccessToken(AccessToken),
-		chatgpt.WithTimeout(120*time.Second),
+		chatgpt.WithTimeout(180*time.Second),
 		chatgpt.WithBaseURI(BaseURI),
 	)
 	if req.IsGPT4 {
