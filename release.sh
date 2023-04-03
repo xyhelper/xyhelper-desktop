@@ -13,7 +13,9 @@ version=$1
 # 构建wails项目
 rm -rf build/bin
 # 构建windows
-wails build -platform=windows/amd64 -webview2=embed -o xyhelper-windows-amd64.exe -ldflags "-X 'main.Version=$version'" -obfuscated -garbleargs "-literals -tiny -seed=myrandomseed"
+# wails build -platform=windows/amd64 -webview2=embed -o xyhelper-windows-amd64.exe -ldflags "-X 'main.Version=$version'" -obfuscated -garbleargs "-literals -tiny -seed=myrandomseed"
+
+wails build -platform=windows/amd64 -webview2=embed -o xyhelper-windows-amd64.exe -ldflags "-X 'main.Version=$version'"
 # 构建 linux amd64
 # wails build --platform=linux/amd64 -webview2=embed -ldflags "-X 'main.Version=$version'" -o xyhelper-linux-amd64
 
